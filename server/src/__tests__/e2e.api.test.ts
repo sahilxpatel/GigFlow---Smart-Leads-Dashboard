@@ -7,7 +7,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 process.env.JWT_SECRET = 'test-e2e-secret';
 process.env.JWT_EXPIRES_IN = '1d';
 
-import { app } from '../app';
+import { app } from '../app.js';
 
 let mongoServer: MongoMemoryServer;
 

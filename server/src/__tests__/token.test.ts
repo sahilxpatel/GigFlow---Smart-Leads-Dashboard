@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 process.env.JWT_SECRET = 'test-secret';
 process.env.JWT_EXPIRES_IN = '1d';
 
-import { createToken, verifyToken } from '../utils/token';
+import { createToken, verifyToken } from '../utils/token.js';
 
 describe('token utils', () => {
   it('creates and verifies a token', () => {
