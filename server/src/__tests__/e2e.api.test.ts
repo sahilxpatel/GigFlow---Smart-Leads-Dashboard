@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import type { Application } from 'express';
 
 // Set minimal env before importing app/utils that read env
 process.env.JWT_SECRET = 'test-e2e-secret';
@@ -24,7 +25,7 @@ afterAll(async () => {
 
 describe('E2E API flow', () => {
   it('registers, logs in, creates a lead, and lists leads', async () => {
-    const agent = request(app as any);
+    const agent = request(app as Application);
 
     // Register
     const registerRes = await agent.post('/api/auth/register').send({
@@ -61,7 +62,7 @@ describe('E2E API flow', () => {
     expect(Array.isArray(listRes.body.data)).toBe(true);
     expect(listRes.body.data.length).toBeGreaterThanOrEqual(1);
 
-    const found = listRes.body.data.find((l: any) => l.email === 'lead@example.com');
+    const found = listRes.body.data.find((lead: { email: string }) => lead.email === 'lead@example.com');
     expect(found).toBeDefined();
   });
 });

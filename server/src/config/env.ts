@@ -2,12 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const requiredEnv = [
-  'MONGODB_URI',
-  'JWT_SECRET'
-] as const;
-
-type RequiredEnvKey = (typeof requiredEnv)[number];
+type RequiredEnvKey = 'MONGODB_URI' | 'JWT_SECRET';
 
 function getRequiredEnv(key: RequiredEnvKey): string {
   const value = process.env[key];
