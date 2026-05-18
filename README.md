@@ -2,6 +2,10 @@
 
 Smart Leads Dashboard is a production-oriented MERN application for managing and tracking sales leads with strict TypeScript on both the client and server. The project is structured as a clean monorepo with reusable UI components, centralized API utilities, role-based access control, and Docker support for local and production-style workflows.
 
+## Preview
+
+![Smart Leads Dashboard preview](client/public/SS/1.png)
+
 ## Features
 
 - JWT authentication with secure register, login, and session restoration
@@ -16,14 +20,61 @@ Smart Leads Dashboard is a production-oriented MERN application for managing and
 - Dockerized client, server, and MongoDB setup
 - Seed script for demo users and leads
 
+## Role-Based Access Control
+
+The app currently uses shared access for most lead management actions, with a single admin-only restriction on deleting leads.
+
+### Admin
+
+- Can register and log in
+- Can view dashboard stats
+- Can view all leads and lead details
+- Can create new leads
+- Can edit existing leads
+- Can export leads to CSV
+- Can delete leads
+
+### Sales User
+
+- Can register and log in
+- Can view dashboard stats
+- Can view all leads and lead details
+- Can create new leads
+- Can edit existing leads
+- Can export leads to CSV
+- Cannot delete leads
+
+### Important note
+
+- The current registration form allows selecting either `admin` or `sales` during signup.
+- If you want stricter production RBAC, admin creation should be restricted to trusted setup or an admin-only flow.
+
 ## Screenshots
 
-Add screenshots here when preparing the final submission:
+### Dashboard overview
 
-- Dashboard overview
-- Leads table with filters
-- Lead details modal
-- Auth screens
+![Dashboard overview](client/public/SS/1.png)
+
+### Screenshots
+
+<table>
+  <tr>
+    <td><img src="client/public/SS/2.png" alt="Leads table with filters" width="100%" /></td>
+    <td><img src="client/public/SS/3.png" alt="Lead details modal" width="100%" /></td>
+  </tr>
+  <tr>
+    <td><img src="client/public/SS/4.png" alt="Auth screen 1" width="100%" /></td>
+    <td><img src="client/public/SS/5.png" alt="Auth screen 2" width="100%" /></td>
+  </tr>
+  <tr>
+    <td><img src="client/public/SS/6.png" alt="Auth screen 3" width="100%" /></td>
+    <td><img src="client/public/SS/7.png" alt="Auth screen 4" width="100%" /></td>
+  </tr>
+  <tr>
+    <td><img src="client/public/SS/8.png" alt="Auth screen 5" width="100%" /></td>
+    <td></td>
+  </tr>
+</table>
 
 ## Tech Stack
 
@@ -213,6 +264,10 @@ Highlights:
 
 - Use the Atlas connection string in `MONGODB_URI`.
 - Keep the database credentials out of source control.
+
+## Demo Video
+
+- Watch the demo video: https://drive.google.com/file/d/1vqih_60_zeV5Ezza7iB1jCkhc6tGwHmE/view?usp=sharing
 
 ## Implementation Notes
 
