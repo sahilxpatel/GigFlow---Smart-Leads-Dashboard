@@ -6,5 +6,6 @@ server/dist
 .env.*
 !.env.example
 coverage
+*.tsbuildinfo
 .DS_Store
 .vscode/settings.json
