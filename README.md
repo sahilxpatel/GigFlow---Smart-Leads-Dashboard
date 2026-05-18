@@ -187,13 +187,13 @@ Highlights:
 
 ### Frontend on Vercel
 
-- Set `VITE_API_BASE_URL` to the deployed backend URL.
+- Set `VITE_API_BASE_URL` to the deployed backend URL including `/api`, for example `https://your-backend.onrender.com/api`.
 - Ensure the build command is `npm run build --workspace client` if deploying from the monorepo root.
 
 ### Backend on Render
 
 - Set `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, and `CORS_ORIGIN`.
-- Point `CORS_ORIGIN` to the deployed frontend URL.
+- Point `CORS_ORIGIN` to the exact deployed frontend URL with no trailing slash, for example `https://your-frontend.vercel.app`.
 - Use `npm run build --workspace server` for the build step and `npm run start --workspace server` for runtime.
 
 ### Database on MongoDB Atlas

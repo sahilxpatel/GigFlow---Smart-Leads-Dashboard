@@ -9,10 +9,34 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 export const app = express();
 
-const corsOrigins = env.corsOrigin.split(',').map((origin) => origin.trim()).filter(Boolean);
+const corsOrigins = env.corsOrigin
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
+const corsOriginSet = new Set(corsOrigins);
 
 app.use(helmet());
-app.use(cors({ origin: corsOrigins.length > 1 ? corsOrigins : corsOrigins[0] ?? env.corsOrigin, credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      const normalizedOrigin = origin.replace(/\/$/, '');
+
+      if (corsOriginSet.has(normalizedOrigin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    credentials: true
+  })
+);
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/health', (_req, res) => {
