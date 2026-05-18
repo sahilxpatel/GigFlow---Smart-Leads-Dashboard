@@ -14,7 +14,13 @@ const corsOrigins = env.corsOrigin
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
-const corsOriginSet = new Set(corsOrigins);
+const corsExactOrigins = new Set(corsOrigins.filter((origin) => !origin.includes('*')));
+const corsOriginPatterns = corsOrigins
+  .filter((origin) => origin.includes('*'))
+  .map((origin) => {
+    const escaped = origin.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`^${escaped.replace(/\*/g, '.*')}$`);
+  });
 
 app.use(helmet());
 app.use(
@@ -27,7 +33,10 @@ app.use(
 
       const normalizedOrigin = origin.replace(/\/$/, '');
 
-      if (corsOriginSet.has(normalizedOrigin)) {
+      const isExactMatch = corsExactOrigins.has(normalizedOrigin);
+      const isPatternMatch = corsOriginPatterns.some((pattern) => pattern.test(normalizedOrigin));
+
+      if (isExactMatch || isPatternMatch) {
         callback(null, true);
         return;
       }
