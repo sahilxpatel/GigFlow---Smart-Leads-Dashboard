@@ -37,7 +37,9 @@ export async function createLead(input: LeadInput, createdById: string) {
     createdBy: new Types.ObjectId(createdById)
   });
 
-  return lead;
+  await lead.populate('createdBy', 'name email role');
+
+  return mapLeadDocument(lead.toObject() as never);
 }
 
 export async function getLeadById(leadId: string) {

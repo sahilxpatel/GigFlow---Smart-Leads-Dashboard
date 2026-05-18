@@ -2,10 +2,11 @@ import { describe, it, expect } from 'vitest';
 import type { AuthUser } from '../interfaces/user.js';
 
 // Set env before importing module that reads env at import time
+process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/test';
 process.env.JWT_SECRET = 'test-secret';
 process.env.JWT_EXPIRES_IN = '1d';
 
-import { createToken, verifyToken } from '../utils/token.js';
+const { createToken, verifyToken } = await import('../utils/token.js');
 
 describe('token utils', () => {
   it('creates and verifies a token', () => {

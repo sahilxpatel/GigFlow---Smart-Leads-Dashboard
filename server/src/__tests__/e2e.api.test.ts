@@ -5,10 +5,11 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import type { Application } from 'express';
 
 // Set minimal env before importing app/utils that read env
+process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/test';
 process.env.JWT_SECRET = 'test-e2e-secret';
 process.env.JWT_EXPIRES_IN = '1d';
 
-import { app } from '../app.js';
+const { app } = await import('../app.js');
 
 let mongoServer: MongoMemoryServer;
 
