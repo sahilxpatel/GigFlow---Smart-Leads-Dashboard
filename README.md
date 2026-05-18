@@ -6,6 +6,14 @@ Smart Leads Dashboard is a production-oriented MERN application for managing and
 
 ![Smart Leads Dashboard preview](client/public/SS/1.png)
 
+## Live Demo
+
+Frontend:
+https://gig-flow-smart-leads-dashboard-clie.vercel.app/
+
+Backend API:
+https://gigflow-smart-leads-dashboard-v4oy.onrender.com
+
 ## Features
 
 - JWT authentication with secure register, login, and session restoration
@@ -20,9 +28,20 @@ Smart Leads Dashboard is a production-oriented MERN application for managing and
 - Dockerized client, server, and MongoDB setup
 - Seed script for demo users and leads
 
+## Key Highlights
+
+- Strict TypeScript architecture
+- JWT Authentication & RBAC
+- Advanced filtering with combined queries
+- Debounced search
+- CSV Export
+- Responsive dashboard UI
+- Dark mode support
+- Dockerized monorepo setup
+
 ## Role-Based Access Control
 
-The app currently uses shared access for most lead management actions, with a single admin-only restriction on deleting leads.
+The application implements role-based access control with admin-only deletion permissions and protected authenticated routes.
 
 ### Admin
 
@@ -141,6 +160,21 @@ server/src/
   utils/
   validators/
 ```
+
+### Architecture Flow
+
+Frontend (React + Zustand)
+  ↓
+REST API (Express + TypeScript)
+  ↓
+MongoDB Atlas
+
+### Architecture Decisions
+
+- `Zustand` was chosen for lightweight and scalable state management across the client.
+- `Zod` provides runtime schema validation and improves type-safety for forms and API contracts.
+- `Docker` ensures consistent development and production environments across the monorepo.
+- The backend follows a layered architecture (controllers → services → models) for clarity and maintainability.
 
 ## Setup
 
