@@ -192,6 +192,12 @@ Highlights:
 
 ## Deployment
 
+### Deployed URLs
+
+- **Frontend (Vercel):** https://gig-flow-smart-leads-dashboard-clie.vercel.app/
+- **Backend (Render):** https://gigflow-smart-leads-dashboard-v4oy.onrender.com
+
+
 ### Frontend on Vercel
 
 - Set `VITE_API_BASE_URL` to the deployed backend URL including `/api`, for example `https://your-backend.onrender.com/api`.
