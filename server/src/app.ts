@@ -14,6 +14,11 @@ const corsOrigins = env.corsOrigin
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
+const fallbackAllowedOrigins = new Set([
+  'https://gig-flow-smart-leads-dashboard-clie.vercel.app',
+  'http://localhost:5173'
+]);
+
 const corsExactOrigins = new Set(corsOrigins.filter((origin) => !origin.includes('*')));
 const corsOriginPatterns = corsOrigins
   .filter((origin) => origin.includes('*'))
@@ -31,28 +36,38 @@ app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-        if (!origin) {
-          callback(null, true);
-          return;
-        }
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
 
-        const normalizedOrigin = origin.replace(/\/$/, '');
+      const normalizedOrigin = origin.replace(/\/$/, '');
 
-        const isExactMatch = corsExactOrigins.has(normalizedOrigin);
-        const isPatternMatch = corsOriginPatterns.some((pattern) => pattern.test(normalizedOrigin));
+      const isExactMatch = corsExactOrigins.has(normalizedOrigin);
+      const isPatternMatch = corsOriginPatterns.some((pattern) => pattern.test(normalizedOrigin));
+      const isFallbackAllowed = fallbackAllowedOrigins.has(normalizedOrigin);
 
-        // Log the incoming origin and match decision for debugging
-        console.debug('CORS check origin=', normalizedOrigin, 'exact=', isExactMatch, 'pattern=', isPatternMatch);
+      // Log the incoming origin and match decision for debugging
+      console.debug(
+        'CORS check origin=',
+        normalizedOrigin,
+        'exact=',
+        isExactMatch,
+        'pattern=',
+        isPatternMatch,
+        'fallback=',
+        isFallbackAllowed
+      );
 
-        if (isExactMatch || isPatternMatch) {
-          callback(null, true);
-          return;
-        }
+      if (isExactMatch || isPatternMatch || isFallbackAllowed) {
+        callback(null, true);
+        return;
+      }
 
-        // Do not throw an error here — return false to let CORS middleware
-        // respond without CORS headers (the browser will block the request)
-        // and avoid turning this into a 500 internal server error in our JSON API.
-        callback(null, false);
+      // Do not throw an error here — return false to let CORS middleware
+      // respond without CORS headers (the browser will block the request)
+      // and avoid turning this into a 500 internal server error in our JSON API.
+      callback(null, false);
     },
     credentials: true
   })
