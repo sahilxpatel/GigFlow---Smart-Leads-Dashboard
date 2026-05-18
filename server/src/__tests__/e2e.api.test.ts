@@ -4,19 +4,25 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import type { Application } from 'express';
 
+const testMongoUri = process.env.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/test';
+
 // Set minimal env before importing app/utils that read env
-process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/test';
+process.env.MONGODB_URI = testMongoUri;
 process.env.JWT_SECRET = 'test-e2e-secret';
 process.env.JWT_EXPIRES_IN = '1d';
 
 const { app } = await import('../app.js');
 
-let mongoServer: MongoMemoryServer;
+let mongoServer: MongoMemoryServer | undefined;
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
-  await mongoose.connect(uri, { dbName: 'test' });
+  if (testMongoUri === 'mongodb://127.0.0.1:27017/test' && !process.env.CI) {
+    mongoServer = await MongoMemoryServer.create();
+    await mongoose.connect(mongoServer.getUri(), { dbName: 'test' });
+    return;
+  }
+
+  await mongoose.connect(testMongoUri);
 });
 
 afterAll(async () => {
