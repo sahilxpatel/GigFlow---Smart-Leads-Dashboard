@@ -9,3 +9,5 @@ coverage
 *.tsbuildinfo
 .DS_Store
 .vscode/settings.json
+
+client/public/Demo video.mp4
