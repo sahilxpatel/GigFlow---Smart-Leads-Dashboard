@@ -22,26 +22,37 @@ const corsOriginPatterns = corsOrigins
     return new RegExp(`^${escaped.replace(/\*/g, '.*')}$`);
   });
 
+// Log configured CORS origins for debugging in deployed logs
+console.info('CORS configured origins:', corsOrigins);
+console.info('CORS exact origins:', Array.from(corsExactOrigins));
+console.info('CORS origin patterns:', corsOriginPatterns.map((r) => r.source));
+
 app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) {
-        callback(null, true);
-        return;
-      }
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
 
-      const normalizedOrigin = origin.replace(/\/$/, '');
+        const normalizedOrigin = origin.replace(/\/$/, '');
 
-      const isExactMatch = corsExactOrigins.has(normalizedOrigin);
-      const isPatternMatch = corsOriginPatterns.some((pattern) => pattern.test(normalizedOrigin));
+        const isExactMatch = corsExactOrigins.has(normalizedOrigin);
+        const isPatternMatch = corsOriginPatterns.some((pattern) => pattern.test(normalizedOrigin));
 
-      if (isExactMatch || isPatternMatch) {
-        callback(null, true);
-        return;
-      }
+        // Log the incoming origin and match decision for debugging
+        console.debug('CORS check origin=', normalizedOrigin, 'exact=', isExactMatch, 'pattern=', isPatternMatch);
 
-      callback(new Error(`Not allowed by CORS: ${origin}`));
+        if (isExactMatch || isPatternMatch) {
+          callback(null, true);
+          return;
+        }
+
+        // Do not throw an error here — return false to let CORS middleware
+        // respond without CORS headers (the browser will block the request)
+        // and avoid turning this into a 500 internal server error in our JSON API.
+        callback(null, false);
     },
     credentials: true
   })
