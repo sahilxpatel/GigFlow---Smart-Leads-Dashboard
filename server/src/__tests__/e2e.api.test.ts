@@ -13,6 +13,10 @@ process.env.JWT_EXPIRES_IN = '1d';
 
 const { app } = await import('../app.js');
 
+const runId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+const testEmail = `e2e-${runId}@example.com`;
+const leadEmail = `lead-${runId}@example.com`;
+
 let mongoServer: MongoMemoryServer | undefined;
 
 beforeAll(async () => {
@@ -37,7 +41,7 @@ describe('E2E API flow', () => {
     // Register
     const registerRes = await agent.post('/api/auth/register').send({
       name: 'E2E User',
-      email: 'e2e@example.com',
+      email: testEmail,
       password: 'Password123',
       role: 'admin'
     });
@@ -48,7 +52,7 @@ describe('E2E API flow', () => {
     expect(typeof token).toBe('string');
 
     // Login
-    const loginRes = await agent.post('/api/auth/login').send({ email: 'e2e@example.com', password: 'Password123' });
+    const loginRes = await agent.post('/api/auth/login').send({ email: testEmail, password: 'Password123' });
     expect(loginRes.status).toBe(200);
     expect(loginRes.body.data).toHaveProperty('token');
 
@@ -58,7 +62,7 @@ describe('E2E API flow', () => {
     const leadRes = await agent
       .post('/api/leads')
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Lead E2E', email: 'lead@example.com', status: 'New', source: 'Website' });
+      .send({ name: 'Lead E2E', email: leadEmail, status: 'New', source: 'Website' });
 
     expect(leadRes.status).toBe(201);
     expect(leadRes.body.data).toHaveProperty('id');
@@ -69,7 +73,7 @@ describe('E2E API flow', () => {
     expect(Array.isArray(listRes.body.data)).toBe(true);
     expect(listRes.body.data.length).toBeGreaterThanOrEqual(1);
 
-    const found = listRes.body.data.find((lead: { email: string }) => lead.email === 'lead@example.com');
+    const found = listRes.body.data.find((lead: { email: string }) => lead.email === leadEmail);
     expect(found).toBeDefined();
   });
 });
