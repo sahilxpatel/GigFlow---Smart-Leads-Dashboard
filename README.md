@@ -140,6 +140,13 @@ npm run dev --workspace server
 npm run dev --workspace client
 ```
 
+### Local URLs
+
+- **Frontend (Vite dev):** http://localhost:5173
+- **Backend (Express dev):** http://localhost:5000
+
+When running with Docker Compose the frontend is available at `http://localhost:3000` and the backend at `http://localhost:5000`.
+
 ### Seed demo data
 
 Seed the database with demo users and 20 leads:
